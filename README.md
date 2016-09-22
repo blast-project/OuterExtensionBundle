@@ -1,2 +1,2 @@
 # SymfonyLibrinfoOuterExtensionBundle
-Provides entities outer extension for Symfony bundles
+Provides outer extensions for Doctrine entities in Symfony bundles
