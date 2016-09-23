@@ -22,7 +22,7 @@ class OuterExtensionListener implements LoggerAwareInterface, EventSubscriber
     /**
      * @var array
      */
-    private $innerEntities = [];
+    private $extendedClasses = [];
 
     /**
      * @var array
@@ -51,16 +51,18 @@ class OuterExtensionListener implements LoggerAwareInterface, EventSubscriber
 
     public function getExtendedClasses()
     {
-        $this->innerEntities = [];
+        // TODO: put Bundles to parse in configuration, so we don't need to parse all bundles
+        // TODO: specify driver (yml, xml or php) in configuration for each module
+        $this->extendedClasses = [];
         foreach($this->kernelBundles as $name => $bundle) {
             $rc = new \ReflectionClass($bundle);
             $bundleDir = dirname($rc->getFileName());
             $outerDir = $bundleDir . '/Resources/config/doctrine/outer';
-            foreach (glob($outerDir . '/*.dcm.yml') as $file) {
-                $class = str_replace('.', '\\', basename($file, '.dcm.yml'));
-                if (!isset($this->innerEntities[$class]))
-                    $this->innerEntities[$class] = [];
-                $this->innerEntities[$class][] = dirname($file);
+            foreach (glob($outerDir . '/*.orm.yml') as $file) {
+                $class = str_replace('.', '\\', basename($file, '.orm.yml'));
+                if (!isset($this->extendedClasses[$class]))
+                    $this->extendedClasses[$class] = [];
+                $this->extendedClasses[$class][] = dirname($file);
             }
         }
     }
@@ -88,17 +90,17 @@ class OuterExtensionListener implements LoggerAwareInterface, EventSubscriber
         $metadata = $eventArgs->getClassMetadata();
         $className = $metadata->getName();
 
-        if (!key_exists($className, $this->innerEntities))
+        if (!key_exists($className, $this->extendedClasses))
             return;
 
-        $locator = $this->innerEntities[$className];
+        $locator = $this->extendedClasses[$className];
         $outMetadata = new ClassMetadata($className);
         $driver = new \Doctrine\ORM\Mapping\Driver\YamlDriver($locator);
         $driver->loadMetadataForClass($className, $outMetadata);
 
-var_dump($outMetadata);
-
         $this->addAssociationMappings ($metadata, $outMetadata);
+        // TODO: add / overwrite other field mappings
+        // TODO: add / overwrite custom repository class
     }
 
     /**
