@@ -3,7 +3,6 @@
 namespace Librinfo\OuterExtensionBundle\EventListener;
 
 use Doctrine\Common\EventSubscriber;
-use Doctrine\Common\Inflector\Inflector;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
@@ -99,9 +98,9 @@ class OuterExtensionListener implements LoggerAwareInterface, EventSubscriber
         $driver = new \Doctrine\ORM\Mapping\Driver\YamlDriver($locator, '.dcm.yml');
         $driver->loadMetadataForClass($className, $outMetadata);
 
-        $this->addAssociationMappings ($metadata, $outMetadata);
+        $this->setCustomRepository($metadata, $outMetadata);
+        $this->addAssociationMappings($metadata, $outMetadata);
         // TODO: add / overwrite other field mappings
-        // TODO: add / overwrite custom repository class
     }
 
     /**
@@ -113,7 +112,6 @@ class OuterExtensionListener implements LoggerAwareInterface, EventSubscriber
         // TODO: if field is already mapped then remove the exsiting mapping before overwriting it
         foreach($outMetadata->getAssociationMappings() as $mapping)
         {
-            //dump($metadata->getName(), $mapping);
             switch ($mapping['type']) {
                 case ClassMetadataInfo::ONE_TO_ONE:
                     $metadata->mapOneToOne($mapping);
@@ -130,4 +128,17 @@ class OuterExtensionListener implements LoggerAwareInterface, EventSubscriber
             }
         }
     }
+
+    /**
+     * @param ClassMetadata $metadata
+     * @param ClassMetadata $outMetadata
+     */
+    private function setCustomRepository($metadata, $outMetadata)
+    {
+        if ($repository = $outMetadata->customRepositoryClassName) {
+            $metadata->setCustomRepositoryClass($repository);
+        }
+    }
+
+
 }
