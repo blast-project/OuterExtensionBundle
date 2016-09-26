@@ -58,8 +58,8 @@ class OuterExtensionListener implements LoggerAwareInterface, EventSubscriber
             $rc = new \ReflectionClass($bundle);
             $bundleDir = dirname($rc->getFileName());
             $outerDir = $bundleDir . '/Resources/config/doctrine/outer';
-            foreach (glob($outerDir . '/*.orm.yml') as $file) {
-                $class = str_replace('.', '\\', basename($file, '.orm.yml'));
+            foreach (glob($outerDir . '/*.dcm.yml') as $file) {
+                $class = str_replace('.', '\\', basename($file, '.dcm.yml'));
                 if (!isset($this->extendedClasses[$class]))
                     $this->extendedClasses[$class] = [];
                 $this->extendedClasses[$class][] = dirname($file);
@@ -96,7 +96,7 @@ class OuterExtensionListener implements LoggerAwareInterface, EventSubscriber
         $locator = $this->extendedClasses[$className];
         $outMetadata = new ClassMetadata($className);
         // TODO: use different drivers (configuration)
-        $driver = new \Doctrine\ORM\Mapping\Driver\YamlDriver($locator, '.orm.yml');
+        $driver = new \Doctrine\ORM\Mapping\Driver\YamlDriver($locator, '.dcm.yml');
         $driver->loadMetadataForClass($className, $outMetadata);
 
         $this->addAssociationMappings ($metadata, $outMetadata);
@@ -113,6 +113,7 @@ class OuterExtensionListener implements LoggerAwareInterface, EventSubscriber
         // TODO: if field is already mapped then remove the exsiting mapping before overwriting it
         foreach($outMetadata->getAssociationMappings() as $mapping)
         {
+            //dump($metadata->getName(), $mapping);
             switch ($mapping['type']) {
                 case ClassMetadataInfo::ONE_TO_ONE:
                     $metadata->mapOneToOne($mapping);
@@ -129,61 +130,4 @@ class OuterExtensionListener implements LoggerAwareInterface, EventSubscriber
             }
         }
     }
-
-    /**
-     * @param ClassMetadata $metadata   Inner entity ClassMetadata
-     * @param string $outerEntity       Outer entity class FQDN
-     */
-    private function mapOneToMany($metadata, $outerEntity)
-    {
-        $innerRc = new \ReflectionClass($metadata->getName());
-        $innerShort = lcfirst($innerRc->getShortName());
-
-        $outerRc = new \ReflectionClass($outerEntity);
-        $outerShort = lcfirst($outerRc->getShortName());
-
-        // one-to-many mapping with outer entity (inverse side)
-        $metadata->mapOneToMany([
-            'targetEntity' => $outerEntity,
-            'fieldName'    => Inflector::pluralize($outerShort),  // ex. "myAuthors"
-            'mappedBy'     => $innerShort,  // ex. "myBlogPost"
-        ]);
-    }
-
-    /**
-     * @param ClassMetadata $metadata   Inner entity ClassMetadata
-     * @param string $outerEntity       Outer entity class FQDN
-     * @param boolean $isOwningSide
-     */
-    private function mapManyToMany($metadata, $outerEntity, $isOwningSide = false)
-    {
-        $innerRc = new \ReflectionClass($metadata->getName());
-        $innerShort = lcfirst($innerRc->getShortName());
-
-        $outerRc = new \ReflectionClass($outerEntity);
-        $outerShort = lcfirst($outerRc->getShortName());
-
-        if ($isOwningSide) {
-             // many-to-many mapping with outer entity (owning side)
-             $metadata->mapManyToMany([
-                 'targetEntity' => $outerEntity,
-                 'fieldName'    => Inflector::pluralize($outerShort),  // ex. "myContacts"
-                 'inversedBy'   => Inflector::pluralize($innerShort),
-                 'joinTable'    => [
-                     'name'               => 'librinfo_outer_'. Inflector::tableize($outerShort) .'__' . Inflector::tableize($outerShort),  // TODO
-                     'joinColumns'        => [Inflector::tableize($innerShort) . '_id' => ['referencedColumnName' => 'id']],
-                     'inverseJoinColumns' => [Inflector::tableize($outerShort) . '_id' => ['referencedColumnName' => 'id']],
-                 ]
-             ]);
-         }
-         else {
-             // many-to-many mapping with outer entity (inverse side)
-             $metadata->mapManyToMany([
-                 'targetEntity' => $outerEntity,
-                 'fieldName'    => Inflector::pluralize($outerShort),  // ex. "myContacts"
-                 'mappedBy'     => Inflector::pluralize($innerShort),  // ex. "myContacts"
-             ]);
-         }
-    }
-
 }
