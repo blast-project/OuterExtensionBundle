@@ -95,7 +95,8 @@ class OuterExtensionListener implements LoggerAwareInterface, EventSubscriber
 
         $locator = $this->extendedClasses[$className];
         $outMetadata = new ClassMetadata($className);
-        $driver = new \Doctrine\ORM\Mapping\Driver\YamlDriver($locator);
+        // TODO: use different drivers (configuration)
+        $driver = new \Doctrine\ORM\Mapping\Driver\YamlDriver($locator, '.orm.yml');
         $driver->loadMetadataForClass($className, $outMetadata);
 
         $this->addAssociationMappings ($metadata, $outMetadata);
