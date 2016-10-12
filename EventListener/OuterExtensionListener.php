@@ -99,8 +99,26 @@ class OuterExtensionListener implements LoggerAwareInterface, EventSubscriber
         $driver->loadMetadataForClass($className, $outMetadata);
 
         $this->setCustomRepository($metadata, $outMetadata);
+        $this->addFieldMappings($metadata, $outMetadata);
         $this->addAssociationMappings($metadata, $outMetadata);
-        // TODO: add / overwrite other field mappings
+    }
+
+
+
+    /**
+     * @param ClassMetadata $metadata
+     * @param ClassMetadata $outMetadata
+     */
+    private function addFieldMappings($metadata, $outMetadata)
+    {
+        foreach($outMetadata->fieldMappings as $fieldName => $mapping)
+        {
+            // Warning: you can't change the field type
+            if ($metadata->hasField($fieldName))
+                $metadata->setAttributeOverride($fieldName, $mapping);
+            else
+                $metadata->mapField($mapping);
+        }
     }
 
     /**
