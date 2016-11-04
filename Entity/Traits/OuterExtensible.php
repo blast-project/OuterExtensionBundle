@@ -18,6 +18,17 @@ trait OuterExtensible
             if ($method && $method != $rc->getShortName() && ClassAnalyzer::hasMethod($rc, $method))
                 $this->$method();
         }
+    }
 
+    /**
+     * http://docs.doctrine-project.org/en/latest/reference/working-with-associations.html#association-management-methods
+     */
+    protected function setOwningSideRelation($owning)
+    {
+        $rc = new \ReflectionClass($this);
+        $setter = 'set' . $rc->getShortName();
+        if (ClassAnalyzer::hasMethod($rc, $setter)) {
+            $owning->$setter($this);
+        }
     }
 }
