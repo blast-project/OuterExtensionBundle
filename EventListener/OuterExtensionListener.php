@@ -92,15 +92,19 @@ class OuterExtensionListener implements LoggerAwareInterface, EventSubscriber
         if (!key_exists($className, $this->extendedClasses))
             return;
 
-        $locator = $this->extendedClasses[$className];
-        $outMetadata = new ClassMetadata($className);
-        // TODO: use different drivers (configuration)
-        $driver = new \Doctrine\ORM\Mapping\Driver\YamlDriver($locator, '.dcm.yml');
-        $driver->loadMetadataForClass($className, $outMetadata);
+        $this->logger->debug("[OuterExtensionListener] Entering listener for « loadClassMetadata » event", ['class' => $className]);
 
-        $this->setCustomRepository($metadata, $outMetadata);
-        $this->addFieldMappings($metadata, $outMetadata);
-        $this->addAssociationMappings($metadata, $outMetadata);
+        foreach ($this->extendedClasses[$className] as $locator)
+        {
+            $outMetadata = new ClassMetadata($className);
+            // TODO: use different drivers (configuration)
+            $driver = new \Doctrine\ORM\Mapping\Driver\YamlDriver($locator, '.dcm.yml');
+            $driver->loadMetadataForClass($className, $outMetadata);
+
+            $this->setCustomRepository($metadata, $outMetadata);
+            $this->addFieldMappings($metadata, $outMetadata);
+            $this->addAssociationMappings($metadata, $outMetadata);
+        }
     }
 
 
