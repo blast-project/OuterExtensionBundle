@@ -39,21 +39,12 @@ class OuterExtensionListener implements LoggerAwareInterface, EventSubscriber
         $this->logger = $logger;
     }
 
-    /**
-     * @param array $bundles
-     */
-    public function setKernelBundles($bundles)
-    {
-        $this->kernelBundles = $bundles;
-        $this->getExtendedClasses();
-    }
-
-    public function getExtendedClasses()
+    public function setExtendedClasses($bundles)
     {
         // TODO: put Bundles to parse in configuration, so we don't need to parse all bundles
         // TODO: specify driver (yml, xml or php) in configuration for each module
         $this->extendedClasses = [];
-        foreach($this->kernelBundles as $name => $bundle)
+        foreach($bundles as $name => $bundle)
         {
             $rc = new \ReflectionClass($bundle);
             $bundleDir = dirname($rc->getFileName());
@@ -168,6 +159,4 @@ class OuterExtensionListener implements LoggerAwareInterface, EventSubscriber
         }
         return $this;
     }
-
-
 }

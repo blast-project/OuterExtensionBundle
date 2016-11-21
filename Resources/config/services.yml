@@ -6,4 +6,4 @@ services:
             - { name: doctrine.event_subscriber }
         calls:
             - [setLogger, [@logger]]
-            - [setKernelBundles, [%kernel.bundles%]]
+            - [setExtendedClasses, [%kernel.bundles%]]
