@@ -53,7 +53,8 @@ class OuterExtensionListener implements LoggerAwareInterface, EventSubscriber
         // TODO: put Bundles to parse in configuration, so we don't need to parse all bundles
         // TODO: specify driver (yml, xml or php) in configuration for each module
         $this->extendedClasses = [];
-        foreach($this->kernelBundles as $name => $bundle) {
+        foreach($this->kernelBundles as $name => $bundle)
+        {
             $rc = new \ReflectionClass($bundle);
             $bundleDir = dirname($rc->getFileName());
             $outerDir = $bundleDir . '/Resources/config/doctrine/outer';
@@ -101,9 +102,11 @@ class OuterExtensionListener implements LoggerAwareInterface, EventSubscriber
             $driver = new \Doctrine\ORM\Mapping\Driver\YamlDriver($locator, '.dcm.yml');
             $driver->loadMetadataForClass($className, $outMetadata);
 
-            $this->setCustomRepository($metadata, $outMetadata);
-            $this->addFieldMappings($metadata, $outMetadata);
-            $this->addAssociationMappings($metadata, $outMetadata);
+            $this->setCustomRepository($metadata, $outMetadata)
+                 ->addFieldMappings($metadata, $outMetadata)
+                 ->addAssociationMappings($metadata, $outMetadata)
+                 // add here other stuff definable by the ORM
+            ;
         }
     }
 
@@ -123,6 +126,7 @@ class OuterExtensionListener implements LoggerAwareInterface, EventSubscriber
             else
                 $metadata->mapField($mapping);
         }
+        return $this;
     }
 
     /**
@@ -149,6 +153,7 @@ class OuterExtensionListener implements LoggerAwareInterface, EventSubscriber
                     break;
             }
         }
+        return $this;
     }
 
     /**
@@ -157,9 +162,11 @@ class OuterExtensionListener implements LoggerAwareInterface, EventSubscriber
      */
     private function setCustomRepository($metadata, $outMetadata)
     {
-        if ($repository = $outMetadata->customRepositoryClassName) {
+        if ($repository = $outMetadata->customRepositoryClassName)
+        {
             $metadata->setCustomRepositoryClass($repository);
         }
+        return $this;
     }
 
 
