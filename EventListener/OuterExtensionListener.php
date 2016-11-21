@@ -51,7 +51,7 @@ class OuterExtensionListener implements LoggerAwareInterface, EventSubscriber
         {
             $rc = new \ReflectionClass($bundle);
             $bundleDir = dirname($rc->getFileName());
-            $outerDir = $bundleDir . '/Resources/config/doctrine/outer';
+            $outerDir = $bundleDir . '/Resources/config/doctrine/outer-extension';
             foreach (glob($outerDir . '/*.dcm.yml') as $file) {
                 $class = str_replace('.', '\\', basename($file, '.dcm.yml'));
                 if (!isset($this->extendedClasses[$class]))
