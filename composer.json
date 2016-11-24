@@ -1,5 +1,5 @@
 {
-    "name": "libre-informatique/outer-extension-bundle",
+    "name": "blast-project/outer-extension-bundle",
     "type": "symfony-bundle",
     "description": "Provides Outer Extension for Doctrine entities in Symfony bundles",
     "require": {
@@ -13,19 +13,19 @@
     "homepage": "https://github.com/libre-informatique/SymfonyLibrinfoOuterExtensionBundle",
     "authors": [
         {
-            "name": "Baptiste SIMON",
-            "email": "baptiste.simon@libre-informatique.fr"
+           "name": "Baptiste SIMON",
+           "email": "baptiste.simon@libre-informatique.fr"
         },        
         {
            "name": "Marcos Bezerra de Menezes",
            "email": "marcos.bezerra@libre-informatique.fr"
         },
         {
-            "name": "Libre Informatique",
-            "homepage": "http://www.libre-informatique.fr/"
+           "name": "Libre Informatique",
+           "homepage": "http://www.libre-informatique.fr/"
         }
     ],
     "autoload": {
-        "psr-4": { "Librinfo\\OuterExtensionBundle\\": "" }
+        "psr-4": { "Blast\\OuterExtensionBundle\\": "" }
     }
 }
