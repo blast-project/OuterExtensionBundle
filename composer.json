@@ -10,15 +10,19 @@
     },
     "license":  "GPL-3.0",
     "keywords": ["symfony", "doctrine", "outer extension"],
-    "homepage": "https://github.com/libre-informatique/SymfonyLibrinfoOuterExtensionBundle",
+    "homepage": "https://github.com/blast-project/OuterExtensionBundle",
     "authors": [
         {
            "name": "Baptiste SIMON",
            "email": "baptiste.simon@libre-informatique.fr"
+        },
+        {
+           "name": "Romain SANCHEZ",
+           "email": "romain.sanchez@libre-informatique.fr"
         },        
         {
            "name": "Marcos Bezerra de Menezes",
-           "email": "marcos.bezerra@libre-informatique.fr"
+           "email": "marcos.bezerrademenezes@libre-informatique.fr"
         },
         {
            "name": "Libre Informatique",
