@@ -1,6 +1,6 @@
 <?php
 
-namespace Librinfo\OuterExtensionBundle\EventListener;
+namespace Blast\OuterExtensionBundle\EventListener;
 
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;

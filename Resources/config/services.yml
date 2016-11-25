@@ -1,7 +1,7 @@
 services:
 
     librinfo_outer_extension.listener.outer_extension:
-        class: Librinfo\OuterExtensionBundle\EventListener\OuterExtensionListener
+        class: Blast\OuterExtensionBundle\EventListener\OuterExtensionListener
         tags:
             - { name: doctrine.event_subscriber }
         calls:
