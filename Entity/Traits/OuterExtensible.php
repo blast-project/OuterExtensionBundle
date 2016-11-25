@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * This file is part of the BLAST package <http://blast.libre-informatique.fr>.
+ *
+ * Copyright (C) 2015-2016 Libre Informatique
+ *
+ * This file is licenced under the GNU GPL v3.
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Librinfo\OuterExtensionBundle\Entity\Traits;
 
 use Librinfo\CoreBundle\Tools\Reflection\ClassAnalyzer;
@@ -30,7 +40,9 @@ trait OuterExtensible
     {
         $rc = new \ReflectionClass($this);
         $setter = 'set' . $rc->getShortName();
-        if (ClassAnalyzer::hasMethod($rc, $setter)) {
+
+        $owning_rc = new \ReflectionClass($owning);
+        if (ClassAnalyzer::hasMethod($owning_rc, $setter)) {
             $owning->$setter($this);
         }
     }
