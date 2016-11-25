@@ -1,9 +1,9 @@
 services:
 
-    librinfo_outer_extension.listener.outer_extension:
-        class: Blast\OuterExtensionBundle\EventListener\OuterExtensionListener
+    blast_outer_extension.listener.outer_extension:
+        class: Blast\OuterExtensionBundle\EventListener\OuterExtensionListenerRR
         tags:
-            - { name: doctrine.event_subscriber }
+            - { name: doctrine.event_subscriber, event: loadClassMetadata }
         calls:
             - [setLogger, [@logger]]
             - [setExtendedClasses, [%kernel.bundles%]]
