@@ -1,6 +1,6 @@
 <?php
 
-namespace Librinfo\OuterExtensionBundle\DependencyInjection;
+namespace Blast\OuterExtensionBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -18,7 +18,7 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('librinfo_outer_extension');
+        $rootNode = $treeBuilder->root('blast_outer_extension');
 
         // Here you should define the parameters that are allowed to
         // configure your bundle. See the documentation linked above for

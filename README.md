@@ -1,4 +1,4 @@
-# SymfonyLibrinfoOuterExtensionBundle
+# BlastOuterExtensionBundle
 Provides outer extensions for Doctrine entities in Symfony bundles
 
 ## Installation
