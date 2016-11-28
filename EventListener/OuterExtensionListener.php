@@ -43,7 +43,6 @@ class OuterExtensionListener implements LoggerAwareInterface, EventSubscriber
      */
     public function setExtendedClasses($bundles)
     {
-        die('EEE');
         // TODO: put Bundles to parse in configuration, so we don't need to parse all bundles
         // TODO: specify driver (yml, xml or php) in configuration for each module
         $this->extendedClasses = [];
