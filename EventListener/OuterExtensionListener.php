@@ -23,11 +23,6 @@ class OuterExtensionListener implements LoggerAwareInterface, EventSubscriber
     private $extendedClasses = [];
 
     /**
-     * @var array
-     */
-    private $kernelBundles = [];
-
-    /**
      * Sets a logger instance on the object
      *
      * @param LoggerInterface $logger
@@ -96,14 +91,13 @@ class OuterExtensionListener implements LoggerAwareInterface, EventSubscriber
             $driver->loadMetadataForClass($className, $outMetadata);
 
             $this->setCustomRepository($metadata, $outMetadata)
-                 ->addFieldMappings($metadata, $outMetadata)
-                 ->addAssociationMappings($metadata, $outMetadata)
-                 // add here other stuff definable by the ORM
+                ->setInheritance($metadata, $outMetadata)
+                ->addFieldMappings($metadata, $outMetadata)
+                ->addAssociationMappings($metadata, $outMetadata)
+                // add here other stuff definable by the ORM
             ;
         }
     }
-
-
 
     /**
      * @param ClassMetadata $metadata
@@ -158,6 +152,24 @@ class OuterExtensionListener implements LoggerAwareInterface, EventSubscriber
         if ($repository = $outMetadata->customRepositoryClassName)
         {
             $metadata->setCustomRepositoryClass($repository);
+        }
+        return $this;
+    }
+
+    /**
+     * @param ClassMetadata $metadata
+     * @param ClassMetadata $outMetadata
+     */
+    private function setInheritance($metadata, $outMetadata)
+    {
+        if (in_array($outMetadata->inheritanceType, [
+            ClassMetadataInfo::INHERITANCE_TYPE_JOINED,
+            ClassMetadataInfo::INHERITANCE_TYPE_SINGLE_TABLE
+        ]))
+        {
+            $metadata->setInheritanceType($outMetadata->inheritanceType);
+            $metadata->setDiscriminatorColumn($outMetadata->discriminatorColumn);
+            $metadata->setDiscriminatorMap($outMetadata->discriminatorMap);
         }
         return $this;
     }
