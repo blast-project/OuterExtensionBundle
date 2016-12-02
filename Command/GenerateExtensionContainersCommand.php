@@ -27,7 +27,7 @@ class GenerateExtensionContainersCommand extends ContainerAwareCommand
     public function configure()
     {
         $this
-                ->setName('blast:outer-extension:generate:containers')
+                ->setName('blast:generate:extension-containers')
                 ->setDescription('Generates missing extension container traits')
                 ->addOption('dir', 'd', InputOption::VALUE_OPTIONAL, 'The namespace root where containers will be generated ex: "src", "vendor/acme"')
         ;
