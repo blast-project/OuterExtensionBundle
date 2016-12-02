@@ -15,7 +15,6 @@ use Blast\CoreBundle\Command\Traits\Interaction;
  */
 class GenerateExtensionContainersCommand extends ContainerAwareCommand
 {
-
     use Interaction;
 
     protected $count = 0;
@@ -47,11 +46,11 @@ class GenerateExtensionContainersCommand extends ContainerAwareCommand
             $mapping += ClassMapGenerator::createMap($bundle->getPath());
 
         spl_autoload_register(array($this, 'loadClass'), true, false);
-
+        
         foreach ( $mapping as $class => $path )
-            if ( $this->isNormalEntity($class) )
-                require_once $path;
-
+        if ( $this->isNormalEntity($class) )
+            require_once $path;
+        
         if ( $this->count < 1 )
             $this->output->writeln('No missing traits were found');
 
@@ -66,11 +65,12 @@ class GenerateExtensionContainersCommand extends ContainerAwareCommand
         $questionHelper = $this->getQuestionHelper();
 
         if ( !$input->getOption('dir') )
-        {
             $questionHelper->writeSection($output, 'Welcome to the Blast extension container generator');
-
+        
+        if ( !$input->getOption('dir') )
+        {
             $dir = $this->askAndValidate(
-                    $input, $output, 'The source folder of your "AppBundle" where traits will be generated in Entity\OuterExtension\{BundleName}', 'src/'
+                $input, $output, 'The source folder of your "AppBundle" where traits will be generated in Entity\OuterExtension\{BundleName}', 'src/'
             );
 
             $input->setOption('dir', $dir);
