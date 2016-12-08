@@ -7,13 +7,14 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\ClassLoader\ClassMapGenerator;
-use Blast\CoreBundle\Command\Traits\Interaction;
+use Blast\OuterExtensionBundle\Command\Traits\Interaction;
+use Blast\OuterExtensionBundle\Tools\Reflection\ClassAnalyzer;
 
 /**
  * Class GenerateAdminCommand.
  *
  */
-class GenerateExtensionsContainersCommand extends ContainerAwareCommand
+class AddContextualExtensionsInContainersCommand extends ContainerAwareCommand
 {
     use Interaction;
 
@@ -27,9 +28,11 @@ class GenerateExtensionsContainersCommand extends ContainerAwareCommand
     public function configure()
     {
         $this
-                ->setName('blast:generate:extension-containers')
-                ->setDescription('Generates missing extension container traits')
-                ->addOption('dir', 'd', InputOption::VALUE_OPTIONAL, 'The namespace root where containers will be generated ex: "src", "vendor/acme"')
+                ->setName('blast:add:contextual-extension')
+                ->setDescription('Adds a given extension in the Extensions Container of an Entity if it already has an other given Extension Provider (trait)')
+                ->addOption('dir', 'd', InputOption::VALUE_OPTIONAL, 'The namespace root where Extension Containers will be patched ex: "src", "vendor/acme"')
+                ->addArgument('source', InputArgument::REQUIRED, 'The searched Extension Provider, with its fully-qualified namespace',
+                ->addArgument('destination', InputArgument::REQUIRED, 'The Extension Provider to add into the Extensions Container, with its fully-qualified namespace',
         ;
     }
 
@@ -45,14 +48,17 @@ class GenerateExtensionsContainersCommand extends ContainerAwareCommand
         foreach ( $this->getBundles() as $bundle )
             $mapping += ClassMapGenerator::createMap($bundle->getPath());
 
-        spl_autoload_register(array($this, 'loadClass'), true, false);
-        
         foreach ( $mapping as $class => $path )
         if ( $this->isNormalEntity($class) )
+        {
             require_once $path;
+            $rc = new ClassAnalyzer($class)
+        }
         
+        /*
         if ( $this->count < 1 )
             $this->output->writeln('No missing traits were found');
+        */
 
         return 0;
     }
@@ -93,53 +99,6 @@ class GenerateExtensionsContainersCommand extends ContainerAwareCommand
     }
 
     /**
-     * Loads the given class or interface.
-     *
-     * @param string $class The name of the class
-     */
-    public function loadClass($class)
-    {
-        if ( !isset($this->map[$class]) && $this->isNormalTrait($class) )
-        {
-            $path = $this->getFilePathFromClassPath($class);
-            $dir = dirname($path);
-
-            if ( !is_dir($dir) )
-                if ( file_exists($dir) )
-                    throw new \Exception($dir . ' is a file...');
-                else
-                    mkdir($dir, 0755, true);
-
-            $result = file_put_contents(
-                    $path, sprintf(
-                            "<?php\n\nnamespace %s;\n\ntrait %s\n{\n}\n", str_replace('/', '\\', dirname(str_replace('\\', '/', $class))), pathinfo($path)['filename'])
-            );
-
-            if ( $result !== false || $result !== '' )
-            {
-                $this->count++;
-                $this->output->writeln(sprintf('Generated trait %s', $path));
-            }
-
-            $this->map[$class] = $path;
-        }
-
-        if ( isset($this->map[$class]) )
-            require $this->map[$class];
-    }
-
-    /**
-     * Returns the file path from the class path
-     *
-     * @param string $class The name of the class
-     * @return string
-     */
-    public function getFilePathFromClassPath($class)
-    {
-        return $this->dir . '/' . str_replace('\\', '/', $class) . '.php';
-    }
-
-    /**
      * Returns if the given class seems to be an entity
      * basing the analysis on its namespace
      *
@@ -162,20 +121,4 @@ class GenerateExtensionsContainersCommand extends ContainerAwareCommand
     {
         return strpos($class, '\\OuterExtension\\') !== false && strpos($class, '\\Tests\\') === false;
     }
-
-    /**
-     * Finds the path to the file where the class is defined.
-     *
-     * @param string $class The name of the class
-     *
-     * @return string|null The path, if found
-     */
-    public function findFile($class)
-    {
-        if ( isset($this->map[$class]) )
-        {
-            return $this->map[$class];
-        }
-    }
-
 }
