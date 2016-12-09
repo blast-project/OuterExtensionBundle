@@ -1,19 +1,27 @@
 <?php
 
+/*
+ * This file is part of the BLAST package <http://blast.libre-informatique.fr>.
+ *
+ * Copyright (C) 2015-2016 Libre Informatique
+ *
+ * This file is licenced under the GNU GPL v3.
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Blast\OuterExtensionBundle\Command;
 
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\ClassLoader\ClassMapGenerator;
 use Blast\OuterExtensionBundle\Command\Traits\Interaction;
 use Blast\OuterExtensionBundle\Tools\Reflection\ClassAnalyzer;
+use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\ClassLoader\ClassMapGenerator;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
 
-/**
- * Class GenerateAdminCommand.
- *
- */
+
 class AddContextualExtensionsInContainersCommand extends ContainerAwareCommand
 {
     use Interaction;
@@ -28,11 +36,11 @@ class AddContextualExtensionsInContainersCommand extends ContainerAwareCommand
     public function configure()
     {
         $this
-                ->setName('blast:add:contextual-extension')
-                ->setDescription('Adds a given extension in the Extensions Container of an Entity if it already has an other given Extension Provider (trait)')
-                ->addOption('dir', 'd', InputOption::VALUE_OPTIONAL, 'The namespace root where Extension Containers will be patched ex: "src", "vendor/acme"')
-                ->addArgument('source', InputArgument::REQUIRED, 'The searched Extension Provider, with its fully-qualified namespace',
-                ->addArgument('destination', InputArgument::REQUIRED, 'The Extension Provider to add into the Extensions Container, with its fully-qualified namespace',
+            ->setName('blast:add:contextual-extension')
+            ->setDescription('Adds a given extension in the Extensions Container of an Entity if it already has an other given Extension Provider (trait)')
+            ->addOption('dir', 'd', InputOption::VALUE_OPTIONAL, 'The namespace root where Extension Containers will be patched ex: "src", "vendor/acme"')
+            ->addArgument('source', InputArgument::REQUIRED, 'The searched Extension Provider, with its fully-qualified namespace')
+            ->addArgument('destination', InputArgument::REQUIRED, 'The Extension Provider to add into the Extensions Container, with its fully-qualified namespace')
         ;
     }
 
@@ -52,9 +60,9 @@ class AddContextualExtensionsInContainersCommand extends ContainerAwareCommand
         if ( $this->isNormalEntity($class) )
         {
             require_once $path;
-            $rc = new ClassAnalyzer($class)
+            $rc = new ClassAnalyzer($class);
         }
-        
+
         /*
         if ( $this->count < 1 )
             $this->output->writeln('No missing traits were found');
@@ -72,7 +80,7 @@ class AddContextualExtensionsInContainersCommand extends ContainerAwareCommand
 
         if ( !$input->getOption('dir') )
             $questionHelper->writeSection($output, 'Welcome to the Blast extension container generator');
-        
+
         if ( !$input->getOption('dir') )
         {
             $dir = $this->askAndValidate(
