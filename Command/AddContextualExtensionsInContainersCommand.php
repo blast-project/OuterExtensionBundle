@@ -4,6 +4,7 @@ namespace Blast\OuterExtensionBundle\Command;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\ClassLoader\ClassMapGenerator;
@@ -31,8 +32,8 @@ class AddContextualExtensionsInContainersCommand extends ContainerAwareCommand
                 ->setName('blast:add:contextual-extension')
                 ->setDescription('Adds a given extension in the Extensions Container of an Entity if it already has an other given Extension Provider (trait)')
                 ->addOption('dir', 'd', InputOption::VALUE_OPTIONAL, 'The namespace root where Extension Containers will be patched ex: "src", "vendor/acme"')
-                ->addArgument('source', InputArgument::REQUIRED, 'The searched Extension Provider, with its fully-qualified namespace',
-                ->addArgument('destination', InputArgument::REQUIRED, 'The Extension Provider to add into the Extensions Container, with its fully-qualified namespace',
+                ->addArgument('source', InputArgument::REQUIRED, 'The searched Extension Provider or Interface, with its fully-qualified namespace')
+                ->addArgument('destination', InputArgument::REQUIRED, 'The Extension Provider to add into the Extension Container, with its fully-qualified namespace')
         ;
     }
 
@@ -52,7 +53,33 @@ class AddContextualExtensionsInContainersCommand extends ContainerAwareCommand
         if ( $this->isNormalEntity($class) )
         {
             require_once $path;
-            $rc = new ClassAnalyzer($class)
+            $ca = new ClassAnalyzer($class);
+            
+            if ( $ca->isTrait() || $ca->isInterface() )
+                continue;
+            // preconditions
+            if ( !$ca->hasTrait($this->convertNamespace($input->getArgument('source')))
+                && !$ca->implementsInterface($this->convertNamespace($input->getArgument('source'))) )
+                continue;
+            if ( $ca->hasTrait($this->convertNamespace($input->getArgument('destination'))) )
+                continue;
+            
+            // finds out the Extension Container of the current entity
+            foreach ( $ca->getTraits() as $traitName => $trait )
+            {
+                $cat = new ClassAnalyzer($trait);
+                if (!(
+                    $cat->isInsideNamespace('AppBundle\\Entity\\OuterExtension')
+                 && $cat->hasSuffix('Extension')
+                ))
+                    continue;
+                
+                $this->insertUseTraitInPHPCode(
+                    '\\'.$this->convertNamespace($input->getArgument('destination')),
+                    $cat->getFilename()
+                );
+                echo $cat->getFilename().PHP_EOL;
+            }
         }
         
         /*
@@ -61,6 +88,27 @@ class AddContextualExtensionsInContainersCommand extends ContainerAwareCommand
         */
 
         return 0;
+    }
+    
+    protected static function insertUseTraitInPHPCode($FQTraitName, $filePath)
+    {
+        if ( !is_writable($filePath) )
+            throw new \Symfony\Component\Filesystem\Exception\IOException(sprintf('The target file is unwritable. File: %s', $cat->getFilename()));
+        
+        $content = preg_replace(
+            '!(<\?php\s*namespace\s+\w.*;\s*trait\s+\w.*[\s*\n*]{)!',
+            "\\1\n    use $FQTraitName;",
+            file_get_contents($filePath)
+        );
+        file_put_contents(
+            $filePath,
+            $content
+        );
+    }
+    
+    protected function convertNamespace($namespace)
+    {
+        return str_replace('/', '\\', $namespace);
     }
 
     /**
@@ -99,15 +147,17 @@ class AddContextualExtensionsInContainersCommand extends ContainerAwareCommand
     }
 
     /**
-     * Returns if the given class seems to be an entity
+     * Returns true if the given class seems to be an entity
      * basing the analysis on its namespace
      *
      * @param string $class The name of the class
      * @return boolean
      */
-    public function isNormalEntity($class)
+    public static function isNormalEntity($class)
     {
-        return strpos($class, '\\Entity\\') !== false && strpos($class, '\\Tests\\') === false;
+        return strpos($class, '\\Entity\\') !== false
+            && strpos($class, '\\Tests\\') === false
+        ;
     }
 
     /**

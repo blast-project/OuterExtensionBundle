@@ -13,7 +13,7 @@ use Blast\CoreBundle\Command\Traits\Interaction;
  * Class GenerateAdminCommand.
  *
  */
-class GenerateExtensionsContainersCommand extends ContainerAwareCommand
+class GenerateExtensionContainersCommand extends ContainerAwareCommand
 {
     use Interaction;
 
