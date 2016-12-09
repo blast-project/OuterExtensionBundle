@@ -7,6 +7,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\ClassLoader\ClassMapGenerator;
+use Symfony\Component\Console\Input\InputArgument;
 use Blast\OuterExtensionBundle\Command\Traits\Interaction;
 use Blast\OuterExtensionBundle\Tools\Reflection\ClassAnalyzer;
 
@@ -28,11 +29,11 @@ class AddContextualExtensionsInContainersCommand extends ContainerAwareCommand
     public function configure()
     {
         $this
-                ->setName('blast:add:contextual-extension')
-                ->setDescription('Adds a given extension in the Extensions Container of an Entity if it already has an other given Extension Provider (trait)')
-                ->addOption('dir', 'd', InputOption::VALUE_OPTIONAL, 'The namespace root where Extension Containers will be patched ex: "src", "vendor/acme"')
-                ->addArgument('source', InputArgument::REQUIRED, 'The searched Extension Provider, with its fully-qualified namespace',
-                ->addArgument('destination', InputArgument::REQUIRED, 'The Extension Provider to add into the Extensions Container, with its fully-qualified namespace',
+            ->setName('blast:add:contextual-extension')
+            ->setDescription('Adds a given extension in the Extensions Container of an Entity if it already has an other given Extension Provider (trait)')
+            ->addOption('dir', 'd', InputOption::VALUE_OPTIONAL, 'The namespace root where Extension Containers will be patched ex: "src", "vendor/acme"')
+            ->addArgument('source', InputArgument::REQUIRED, 'The searched Extension Provider, with its fully-qualified namespace')
+            ->addArgument('destination', InputArgument::REQUIRED, 'The Extension Provider to add into the Extensions Container, with its fully-qualified namespace')
         ;
     }
 
@@ -52,7 +53,7 @@ class AddContextualExtensionsInContainersCommand extends ContainerAwareCommand
         if ( $this->isNormalEntity($class) )
         {
             require_once $path;
-            $rc = new ClassAnalyzer($class)
+            $rc = new ClassAnalyzer($class);
         }
         
         /*
