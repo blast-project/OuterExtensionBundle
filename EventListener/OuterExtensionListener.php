@@ -94,7 +94,7 @@ class OuterExtensionListener implements LoggerAwareInterface, EventSubscriber
                 ->setInheritance($metadata, $outMetadata)
                 ->addFieldMappings($metadata, $outMetadata)
                 ->addAssociationMappings($metadata, $outMetadata)
-                // add here other stuff definable by the ORM
+                // TODO: add here other stuff definable by the ORM
             ;
         }
     }
@@ -122,22 +122,26 @@ class OuterExtensionListener implements LoggerAwareInterface, EventSubscriber
      */
     private function addAssociationMappings($metadata, $outMetadata)
     {
-        // TODO: if field is already mapped then remove the exsiting mapping before overwriting it
         foreach($outMetadata->getAssociationMappings() as $mapping)
         {
-            switch ($mapping['type']) {
-                case ClassMetadataInfo::ONE_TO_ONE:
-                    $metadata->mapOneToOne($mapping);
-                    break;
-                case ClassMetadataInfo::ONE_TO_MANY:
-                    $metadata->mapOneToMany($mapping);
-                    break;
-                case ClassMetadataInfo::MANY_TO_ONE:
-                    $metadata->mapManyToOne($mapping);
-                    break;
-                case ClassMetadataInfo::MANY_TO_MANY:
-                    $metadata->mapManyToMany($mapping);
-                    break;
+            if ($metadata->hasAssociation($mapping['fieldName'])) {
+                $metadata->setAssociationOverride($mapping['fieldName'], $mapping);
+            }
+            else {
+                switch ($mapping['type']) {
+                    case ClassMetadataInfo::ONE_TO_ONE:
+                        $metadata->mapOneToOne($mapping);
+                        break;
+                    case ClassMetadataInfo::ONE_TO_MANY:
+                        $metadata->mapOneToMany($mapping);
+                        break;
+                    case ClassMetadataInfo::MANY_TO_ONE:
+                        $metadata->mapManyToOne($mapping);
+                        break;
+                    case ClassMetadataInfo::MANY_TO_MANY:
+                        $metadata->mapManyToMany($mapping);
+                        break;
+                }
             }
         }
         return $this;
