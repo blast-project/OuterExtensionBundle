@@ -3,30 +3,37 @@
     "type": "symfony-bundle",
     "description": "Provides Outer Extension for Doctrine entities in Symfony bundles",
     "require": {
-        "symfony/symfony": "3.2.*"    
+        "symfony/symfony": "3.2.*"
     },
-    "license":  "GPL-3.0",
-    "keywords": ["symfony", "doctrine", "outer extension"],
+    "license": "GPL-3.0",
+    "keywords": [
+        "symfony",
+        "doctrine",
+        "outer extension"
+    ],
     "homepage": "https://github.com/blast-project/OuterExtensionBundle",
     "authors": [
         {
-           "name": "Baptiste SIMON",
-           "email": "baptiste.simon@libre-informatique.fr"
+            "name": "Baptiste SIMON",
+            "email": "baptiste.simon@libre-informatique.fr"
         },
         {
-           "name": "Romain SANCHEZ",
-           "email": "romain.sanchez@libre-informatique.fr"
-        },        
-        {
-           "name": "Marcos Bezerra de Menezes",
-           "email": "marcos.bezerrademenezes@libre-informatique.fr"
+            "name": "Romain SANCHEZ",
+            "email": "romain.sanchez@libre-informatique.fr"
         },
         {
-           "name": "Libre Informatique",
-           "homepage": "http://www.libre-informatique.fr/"
+            "name": "Marcos Bezerra de Menezes",
+            "email": "marcos.bezerrademenezes@libre-informatique.fr"
+        },
+        {
+            "name": "Libre Informatique",
+            "homepage": "http://www.libre-informatique.fr/"
         }
     ],
     "autoload": {
-        "psr-4": { "Blast\\OuterExtensionBundle\\": "" }
+        "psr-4": {
+            "Blast\\OuterExtensionBundle\\": "src/",
+            "Blast\\OuterExtensionBundle\\Tests\\": "tests/"
+        }
     }
 }
