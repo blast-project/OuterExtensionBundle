@@ -3,7 +3,11 @@
     "type": "symfony-bundle",
     "description": "Provides Outer Extension for Doctrine entities in Symfony bundles",
     "require": {
+	"php": ">=5.6",
         "symfony/symfony": "3.2.*"
+    },
+    "require-dev": {
+	"symfony/phpunit-bridge": "^2.7 || ^3.0"
     },
     "license": "GPL-3.0",
     "keywords": [
