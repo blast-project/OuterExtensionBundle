@@ -1,5 +1,15 @@
 # Change Log
 
+## [0.4.3](https://github.com/blast-project/OuterExtensionBundle/tree/0.4.3) (2017-06-13)
+[Full Changelog](https://github.com/blast-project/OuterExtensionBundle/compare/0.4.2...0.4.3)
+
+**Merged pull requests:**
+
+- DevKit updates for OuterExtensionBundle [\#10](https://github.com/blast-project/OuterExtensionBundle/pull/10) ([BlastCI](https://github.com/BlastCI))
+- DevKit updates for OuterExtensionBundle [\#9](https://github.com/blast-project/OuterExtensionBundle/pull/9) ([BlastCI](https://github.com/BlastCI))
+- DevKit updates for OuterExtensionBundle [\#8](https://github.com/blast-project/OuterExtensionBundle/pull/8) ([BlastCI](https://github.com/BlastCI))
+- DevKit updates for OuterExtensionBundle [\#6](https://github.com/blast-project/OuterExtensionBundle/pull/6) ([BlastCI](https://github.com/BlastCI))
+
 ## [0.4.2](https://github.com/blast-project/OuterExtensionBundle/tree/0.4.2) (2017-05-04)
 [Full Changelog](https://github.com/blast-project/OuterExtensionBundle/compare/0.2...0.4.2)
 
