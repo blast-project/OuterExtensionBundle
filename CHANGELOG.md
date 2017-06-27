@@ -1,5 +1,8 @@
 # Change Log
 
+## [0.4.4](https://github.com/blast-project/OuterExtensionBundle/tree/0.4.4) (2017-06-19)
+[Full Changelog](https://github.com/blast-project/OuterExtensionBundle/compare/0.4.3...0.4.4)
+
 ## [0.4.3](https://github.com/blast-project/OuterExtensionBundle/tree/0.4.3) (2017-06-13)
 [Full Changelog](https://github.com/blast-project/OuterExtensionBundle/compare/0.4.2...0.4.3)
 
