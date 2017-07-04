@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * This file is part of the Blast Project package.
+ *
+ * Copyright (C) 2015-2017 Libre Informatique
+ *
+ * This file is licenced under the GNU LGPL v3.
+ * For the full copyright and license information, please view the LICENSE.md
+ * file that was distributed with this source code.
+ */
+
 namespace Blast\OuterExtensionBundle\EventListener;
 
 use Doctrine\Common\EventSubscriber;
@@ -23,10 +33,9 @@ class OuterExtensionListener implements LoggerAwareInterface, EventSubscriber
     private $extendedClasses = [];
 
     /**
-     * Sets a logger instance on the object
+     * Sets a logger instance on the object.
      *
      * @param LoggerInterface $logger
-     * @return null
      */
     public function setLogger(LoggerInterface $logger)
     {
@@ -41,15 +50,15 @@ class OuterExtensionListener implements LoggerAwareInterface, EventSubscriber
         // TODO: put Bundles to parse in configuration, so we don't need to parse all bundles
         // TODO: specify driver (yml, xml or php) in configuration for each module
         $this->extendedClasses = [];
-        foreach($bundles as $name => $bundle)
-        {
+        foreach ($bundles as $name => $bundle) {
             $rc = new \ReflectionClass($bundle);
             $bundleDir = dirname($rc->getFileName());
-            $outerDir = $bundleDir . '/Resources/config/doctrine/outer-extension';
-            foreach (glob($outerDir . '/*.dcm.yml') as $file) {
+            $outerDir = $bundleDir.'/Resources/config/doctrine/outer-extension';
+            foreach (glob($outerDir.'/*.dcm.yml') as $file) {
                 $class = str_replace('.', '\\', basename($file, '.dcm.yml'));
-                if (!isset($this->extendedClasses[$class]))
+                if (!isset($this->extendedClasses[$class])) {
                     $this->extendedClasses[$class] = [];
+                }
                 $this->extendedClasses[$class][] = dirname($file);
             }
         }
@@ -68,7 +77,7 @@ class OuterExtensionListener implements LoggerAwareInterface, EventSubscriber
     }
 
     /**
-     * Dynamic Doctrine mappings
+     * Dynamic Doctrine mappings.
      *
      * @param LoadClassMetadataEventArgs $eventArgs
      */
@@ -78,13 +87,13 @@ class OuterExtensionListener implements LoggerAwareInterface, EventSubscriber
         $metadata = $eventArgs->getClassMetadata();
         $className = $metadata->getName();
 
-        if (!key_exists($className, $this->extendedClasses))
+        if (!key_exists($className, $this->extendedClasses)) {
             return;
+        }
 
-        $this->logger->debug("[OuterExtensionListener] Entering listener for « loadClassMetadata » event", ['class' => $className]);
+        $this->logger->debug('[OuterExtensionListener] Entering listener for « loadClassMetadata » event', ['class' => $className]);
 
-        foreach ($this->extendedClasses[$className] as $locator)
-        {
+        foreach ($this->extendedClasses[$className] as $locator) {
             $outMetadata = new ClassMetadata($className);
             // TODO: use different drivers (configuration)
             $driver = new \Doctrine\ORM\Mapping\Driver\YamlDriver($locator, '.dcm.yml');
@@ -105,14 +114,15 @@ class OuterExtensionListener implements LoggerAwareInterface, EventSubscriber
      */
     private function addFieldMappings($metadata, $outMetadata)
     {
-        foreach($outMetadata->fieldMappings as $fieldName => $mapping)
-        {
+        foreach ($outMetadata->fieldMappings as $fieldName => $mapping) {
             // Warning: you can't change the field type
-            if ($metadata->hasField($fieldName))
+            if ($metadata->hasField($fieldName)) {
                 $metadata->setAttributeOverride($fieldName, $mapping);
-            else
+            } else {
                 $metadata->mapField($mapping);
+            }
         }
+
         return $this;
     }
 
@@ -122,12 +132,10 @@ class OuterExtensionListener implements LoggerAwareInterface, EventSubscriber
      */
     private function addAssociationMappings($metadata, $outMetadata)
     {
-        foreach($outMetadata->getAssociationMappings() as $mapping)
-        {
+        foreach ($outMetadata->getAssociationMappings() as $mapping) {
             if ($metadata->hasAssociation($mapping['fieldName'])) {
                 $metadata->setAssociationOverride($mapping['fieldName'], $mapping);
-            }
-            else {
+            } else {
                 switch ($mapping['type']) {
                     case ClassMetadataInfo::ONE_TO_ONE:
                         $metadata->mapOneToOne($mapping);
@@ -144,6 +152,7 @@ class OuterExtensionListener implements LoggerAwareInterface, EventSubscriber
                 }
             }
         }
+
         return $this;
     }
 
@@ -153,10 +162,10 @@ class OuterExtensionListener implements LoggerAwareInterface, EventSubscriber
      */
     private function setCustomRepository($metadata, $outMetadata)
     {
-        if ($repository = $outMetadata->customRepositoryClassName)
-        {
+        if ($repository = $outMetadata->customRepositoryClassName) {
             $metadata->setCustomRepositoryClass($repository);
         }
+
         return $this;
     }
 
@@ -168,13 +177,13 @@ class OuterExtensionListener implements LoggerAwareInterface, EventSubscriber
     {
         if (in_array($outMetadata->inheritanceType, [
             ClassMetadataInfo::INHERITANCE_TYPE_JOINED,
-            ClassMetadataInfo::INHERITANCE_TYPE_SINGLE_TABLE
-        ]))
-        {
+            ClassMetadataInfo::INHERITANCE_TYPE_SINGLE_TABLE,
+        ])) {
             $metadata->setInheritanceType($outMetadata->inheritanceType);
             $metadata->setDiscriminatorColumn($outMetadata->discriminatorColumn);
             $metadata->setDiscriminatorMap($outMetadata->discriminatorMap);
         }
+
         return $this;
     }
 }

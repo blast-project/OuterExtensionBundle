@@ -1,12 +1,12 @@
 <?php
 
 /*
- * This file is part of the BLAST package <http://blast.libre-informatique.fr>.
+ * This file is part of the Blast Project package.
  *
- * Copyright (C) 2015-2016 Libre Informatique
+ * Copyright (C) 2015-2017 Libre Informatique
  *
- * This file is licenced under the GNU GPL v3.
- * For the full copyright and license information, please view the LICENSE
+ * This file is licenced under the GNU LGPL v3.
+ * For the full copyright and license information, please view the LICENSE.md
  * file that was distributed with this source code.
  */
 
@@ -52,39 +52,43 @@ class AddContextualExtensionsInContainersCommand extends ContainerAwareCommand
         $this->dir = $input->getOption('dir');
         $mapping = [];
 
-        foreach ( $this->getBundles() as $bundle )
+        foreach ($this->getBundles() as $bundle) {
             $mapping += ClassMapGenerator::createMap($bundle->getPath());
+        }
 
-        foreach ( $mapping as $class => $path )
-        if ( $this->isNormalEntity($class) )
-        {
-            require_once $path;
-            $ca = new ClassAnalyzer($class);
-            
-            if ( $ca->isTrait() || $ca->isInterface() )
-                continue;
+        foreach ($mapping as $class => $path) {
+            if ($this->isNormalEntity($class)) {
+                require_once $path;
+                $ca = new ClassAnalyzer($class);
+
+                if ($ca->isTrait() || $ca->isInterface()) {
+                    continue;
+                }
             // preconditions
-            if ( !$ca->hasTrait($this->convertNamespace($input->getArgument('source')))
-                && !$ca->implementsInterface($this->convertNamespace($input->getArgument('source'))) )
+            if (!$ca->hasTrait($this->convertNamespace($input->getArgument('source')))
+                && !$ca->implementsInterface($this->convertNamespace($input->getArgument('source')))) {
                 continue;
-            if ( $ca->hasTrait($this->convertNamespace($input->getArgument('destination'))) )
-                continue;
-            
+            }
+                if ($ca->hasTrait($this->convertNamespace($input->getArgument('destination')))) {
+                    continue;
+                }
+
             // finds out the Extension Container of the current entity
-            foreach ( $ca->getTraits() as $traitName => $trait )
-            {
+            foreach ($ca->getTraits() as $traitName => $trait) {
                 $cat = new ClassAnalyzer($trait);
                 if (!(
                     $cat->isInsideNamespace('AppBundle\\Entity\\OuterExtension')
                  && $cat->hasSuffix('Extension')
-                ))
+                )) {
                     continue;
-                
+                }
+
                 $this->insertUseTraitInPHPCode(
                     '\\'.$this->convertNamespace($input->getArgument('destination')),
                     $cat->getFilename()
                 );
                 echo $cat->getFilename().PHP_EOL;
+            }
             }
         }
 
@@ -95,12 +99,12 @@ class AddContextualExtensionsInContainersCommand extends ContainerAwareCommand
 
         return 0;
     }
-    
+
     protected static function insertUseTraitInPHPCode($FQTraitName, $filePath)
     {
-        if ( !is_writable($filePath) )
+        if (!is_writable($filePath)) {
             throw new \Symfony\Component\Filesystem\Exception\IOException(sprintf('The target file is unwritable. File: %s', $cat->getFilename()));
-        
+        }
         $content = preg_replace(
             '!(<\?php\s*namespace\s+\w.*;\s*trait\s+\w.*[\s*\n*]{)!',
             "\\1\n    use $FQTraitName;",
@@ -111,7 +115,7 @@ class AddContextualExtensionsInContainersCommand extends ContainerAwareCommand
             $content
         );
     }
-    
+
     protected function convertNamespace($namespace)
     {
         return str_replace('/', '\\', $namespace);
@@ -124,11 +128,11 @@ class AddContextualExtensionsInContainersCommand extends ContainerAwareCommand
     {
         $questionHelper = $this->getQuestionHelper();
 
-        if ( !$input->getOption('dir') )
+        if (!$input->getOption('dir')) {
             $questionHelper->writeSection($output, 'Welcome to the Blast extension container generator');
+        }
 
-        if ( !$input->getOption('dir') )
-        {
+        if (!$input->getOption('dir')) {
             $dir = $this->askAndValidate(
                 $input, $output, 'The source folder of your "AppBundle" where traits will be generated in Entity\OuterExtension\{BundleName}', 'src/'
             );
@@ -141,8 +145,9 @@ class AddContextualExtensionsInContainersCommand extends ContainerAwareCommand
     {
         $bundles = $this->getApplication()->getKernel()->getBundles();
 
-        if ( isset($bundles[$name]) )
+        if (isset($bundles[$name])) {
             return $bundles[$name];
+        }
 
         throw new \RuntimeException("There is no bundle named $name.");
     }
@@ -154,10 +159,11 @@ class AddContextualExtensionsInContainersCommand extends ContainerAwareCommand
 
     /**
      * Returns true if the given class seems to be an entity
-     * basing the analysis on its namespace
+     * basing the analysis on its namespace.
      *
      * @param string $class The name of the class
-     * @return boolean
+     *
+     * @return bool
      */
     public static function isNormalEntity($class)
     {
@@ -168,10 +174,11 @@ class AddContextualExtensionsInContainersCommand extends ContainerAwareCommand
 
     /**
      * Returns if the given class seems to be a trait
-     * basing the analysis on its namespace
+     * basing the analysis on its namespace.
      *
      * @param string $class The name of the class
-     * @return boolean
+     *
+     * @return bool
      */
     public function isNormalTrait($class)
     {

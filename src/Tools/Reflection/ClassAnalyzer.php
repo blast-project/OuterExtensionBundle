@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * This file is part of the Blast Project package.
+ *
+ * Copyright (C) 2015-2017 Libre Informatique
+ *
+ * This file is licenced under the GNU LGPL v3.
+ * For the full copyright and license information, please view the LICENSE.md
+ * file that was distributed with this source code.
+ */
+
 namespace Blast\OuterExtensionBundle\Tools\Reflection;
 
 use Blast\CoreBundle\Tools\Reflection\ClassAnalyzer as CoreClassAnalyzer;
@@ -8,9 +18,9 @@ class ClassAnalyzer
 {
     // ReflectionClass
     protected $rc;
-    
+
     /**
-     * @param ReflectionClass|string   $class   A ReflectionClass object or a class name
+     * @param ReflectionClass|string $class A ReflectionClass object or a class name
      **/
     public function __construct($class)
     {
@@ -18,9 +28,9 @@ class ClassAnalyzer
             ? $class
             : new \ReflectionClass($class);
     }
-    
+
     /**
-     * Returns all parents of a class (parent, parent of parent, parent of parent's parent and so on)
+     * Returns all parents of a class (parent, parent of parent, parent of parent's parent and so on).
      *
      * @return array
      */
@@ -30,7 +40,7 @@ class ClassAnalyzer
     }
 
     /**
-     * getTraits
+     * getTraits.
      *
      * This method returns back all traits used by a given class
      * recursively
@@ -43,11 +53,11 @@ class ClassAnalyzer
     }
 
     /**
-     * isTrait
+     * isTrait.
      *
      * This method returns true if the current "class" is a trait
      *
-     * @return boolean
+     * @return bool
      */
     public function isTrait()
     {
@@ -55,13 +65,14 @@ class ClassAnalyzer
     }
 
     /**
-     * hasTraits
+     * hasTraits.
      *
      * This method returns back all traits used by a given class
      * recursively
      *
-     * @param string                   $traitName        A string representing an existing trait
-     * @return boolean
+     * @param string $traitName A string representing an existing trait
+     *
+     * @return bool
      */
     public function hasTrait($traitName)
     {
@@ -69,12 +80,13 @@ class ClassAnalyzer
     }
 
     /**
-     * hasProperty
+     * hasProperty.
      *
      * This method says if a class has a property
      *
-     * @param string                   $propertyName      A string representing an existing property
-     * @return boolean
+     * @param string $propertyName A string representing an existing property
+     *
+     * @return bool
      */
     public function hasProperty($propertyName)
     {
@@ -82,41 +94,44 @@ class ClassAnalyzer
     }
 
     /**
-     * hasMethod
+     * hasMethod.
      *
      * This method says if a class has a method
      *
-     * @param string                  $methodName       a method name
-     * @return boolean
+     * @param string $methodName a method name
+     *
+     * @return bool
      */
     public function hasMethod($methodName)
     {
         return CoreClassAnalyzer::hasMethod($methodName);
     }
-    
+
     /**
-     * isInsideNamespace
+     * isInsideNamespace.
      *
      * This method says if a class namespace is the namespace or a sub-namespace of the given one
      *
-     * @param string                  $namespace       a namespace
-     * @return boolean
+     * @param string $namespace a namespace
+     *
+     * @return bool
      */
     public function isInsideNamespace($namespace)
     {
-        $orig       = preg_replace($search = ['!^\\\\!', '!\\\\$!'], ['', ''], $this->rc->getNamespaceName());
-        $namespace  = preg_replace($search, ['', ''], $namespace);
-        
+        $orig = preg_replace($search = ['!^\\\\!', '!\\\\$!'], ['', ''], $this->rc->getNamespaceName());
+        $namespace = preg_replace($search, ['', ''], $namespace);
+
         return strpos($orig, $namespace) !== false;
     }
 
     /**
-     * hasSuffix
+     * hasSuffix.
      *
      * This method says if a class name ends with a given string
      *
-     * @param string                  $suffix    a suffix
-     * @return boolean
+     * @param string $suffix a suffix
+     *
+     * @return bool
      */
     public function hasSuffix($suffix)
     {
@@ -124,7 +139,7 @@ class ClassAnalyzer
     }
 
     /**
-     * getFilename
+     * getFilename.
      *
      * This method is a proxy method for ReflectionClass::getFilename()
      *
@@ -137,20 +152,22 @@ class ClassAnalyzer
 
     private static function _getTraits($class, array $traits = null)
     {
-        if ( is_null($traits) )
+        if (is_null($traits)) {
             $traits = array();
+        }
 
         // traits being embedded through the current class or the embedded traits
-        foreach ( $class->getTraits() as $trait )
-        {
+        foreach ($class->getTraits() as $trait) {
             $traits = self::_getTraits($trait, $traits); // first the embedded traits that come first...
-            if ( !isset($traits[$trait->name]) )
-                $traits[$trait->name] = $trait;                    // then the current trait
+            if (!isset($traits[$trait->name])) {
+                $traits[$trait->name] = $trait;
+            }                    // then the current trait
         }
 
         // traits embedded by the parent class
-        if ( $class->getParentClass() )
+        if ($class->getParentClass()) {
             $traits = self::_getTraits($class->getParentClass(), $traits);
+        }
 
         return $traits;
     }
