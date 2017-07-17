@@ -84,10 +84,10 @@ class AddContextualExtensionsInContainersCommand extends ContainerAwareCommand
                 }
 
                 $this->insertUseTraitInPHPCode(
-                    '\\'.$this->convertNamespace($input->getArgument('destination')),
+                    '\\' . $this->convertNamespace($input->getArgument('destination')),
                     $cat->getFilename()
                 );
-                echo $cat->getFilename().PHP_EOL;
+                echo $cat->getFilename() . PHP_EOL;
             }
             }
         }
