@@ -119,7 +119,7 @@ class GenerateExtensionContainersCommand extends ContainerAwareCommand
 
             if (!is_dir($dir)) {
                 if (file_exists($dir)) {
-                    throw new \Exception($dir.' is a file...');
+                    throw new \Exception($dir . ' is a file...');
                 } else {
                     mkdir($dir, 0755, true);
                 }
@@ -152,7 +152,7 @@ class GenerateExtensionContainersCommand extends ContainerAwareCommand
      */
     public function getFilePathFromClassPath($class)
     {
-        return $this->dir.'/'.str_replace('\\', '/', $class).'.php';
+        return $this->dir . '/' . str_replace('\\', '/', $class) . '.php';
     }
 
     /**

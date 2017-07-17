@@ -40,7 +40,7 @@ trait OuterExtensible
     protected function setOwningSideRelation($owning)
     {
         $rc = new \ReflectionClass($this);
-        $setter = 'set'.$rc->getShortName();
+        $setter = 'set' . $rc->getShortName();
 
         $owning_rc = new \ReflectionClass($owning);
         if (ClassAnalyzer::hasMethod($owning_rc, $setter)) {
