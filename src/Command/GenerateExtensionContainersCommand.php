@@ -38,8 +38,7 @@ class GenerateExtensionContainersCommand extends ContainerAwareCommand
         $this
             ->setName('blast:generate:extension-containers')
             ->setDescription('Generates missing extension container traits')
-            ->addOption('dir', 'd', InputOption::VALUE_OPTIONAL, 'The namespace root where containers will be generated ex: "src", "vendor/acme"')
-        ;
+            ->addOption('dir', 'd', InputOption::VALUE_OPTIONAL, 'The namespace root where containers will be generated ex: "src", "vendor/acme"');
     }
 
     /**
@@ -59,7 +58,7 @@ class GenerateExtensionContainersCommand extends ContainerAwareCommand
 
         foreach ($mapping as $class => $path) {
             if ($this->isNormalEntity($class)) {
-                require_once $path;
+                include_once $path;
             }
         }
 
@@ -126,8 +125,9 @@ class GenerateExtensionContainersCommand extends ContainerAwareCommand
             }
 
             $result = file_put_contents(
-                    $path, sprintf(
-                            "<?php\n\nnamespace %s;\n\ntrait %s\n{\n}\n", str_replace('/', '\\', dirname(str_replace('\\', '/', $class))), pathinfo($path)['filename'])
+                $path, sprintf(
+                    "<?php\n\nnamespace %s;\n\ntrait %s\n{\n}\n", str_replace('/', '\\', dirname(str_replace('\\', '/', $class))), pathinfo($path)['filename']
+                )
             );
 
             if ($result !== false || $result !== '') {
@@ -139,7 +139,7 @@ class GenerateExtensionContainersCommand extends ContainerAwareCommand
         }
 
         if (isset($this->map[$class])) {
-            require $this->map[$class];
+            include $this->map[$class];
         }
     }
 

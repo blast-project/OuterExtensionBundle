@@ -25,8 +25,8 @@ class ClassAnalyzer
     public function __construct($class)
     {
         $this->rc = $class instanceof \ReflectionClass
-            ? $class
-            : new \ReflectionClass($class);
+        ? $class
+        : new \ReflectionClass($class);
     }
 
     /**

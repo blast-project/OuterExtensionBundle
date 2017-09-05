@@ -39,8 +39,7 @@ class AddContextualExtensionsInContainersCommand extends ContainerAwareCommand
             ->setDescription('Adds a given extension in the Extensions Container of an Entity if it already has an other given Extension Provider (trait)')
             ->addOption('dir', 'd', InputOption::VALUE_OPTIONAL, 'The namespace root where Extension Containers will be patched ex: "src", "vendor/acme"')
             ->addArgument('source', InputArgument::REQUIRED, 'The searched Extension Provider or Interface, with its fully-qualified namespace')
-            ->addArgument('destination', InputArgument::REQUIRED, 'The Extension Provider to add into the Extension Container, with its fully-qualified namespace')
-        ;
+            ->addArgument('destination', InputArgument::REQUIRED, 'The Extension Provider to add into the Extension Container, with its fully-qualified namespace');
     }
 
     /**
@@ -58,43 +57,43 @@ class AddContextualExtensionsInContainersCommand extends ContainerAwareCommand
 
         foreach ($mapping as $class => $path) {
             if ($this->isNormalEntity($class)) {
-                require_once $path;
+                include_once $path;
                 $ca = new ClassAnalyzer($class);
 
                 if ($ca->isTrait() || $ca->isInterface()) {
                     continue;
                 }
-            // preconditions
-            if (!$ca->hasTrait($this->convertNamespace($input->getArgument('source')))
-                && !$ca->implementsInterface($this->convertNamespace($input->getArgument('source')))) {
-                continue;
-            }
+                // preconditions
+                if (!$ca->hasTrait($this->convertNamespace($input->getArgument('source')))
+                    && !$ca->implementsInterface($this->convertNamespace($input->getArgument('source')))
+                ) {
+                    continue;
+                }
                 if ($ca->hasTrait($this->convertNamespace($input->getArgument('destination')))) {
                     continue;
                 }
 
-            // finds out the Extension Container of the current entity
-            foreach ($ca->getTraits() as $traitName => $trait) {
-                $cat = new ClassAnalyzer($trait);
-                if (!(
-                    $cat->isInsideNamespace('AppBundle\\Entity\\OuterExtension')
-                 && $cat->hasSuffix('Extension')
-                )) {
-                    continue;
-                }
+                // finds out the Extension Container of the current entity
+                foreach ($ca->getTraits() as $traitName => $trait) {
+                    $cat = new ClassAnalyzer($trait);
+                    if (!($cat->isInsideNamespace('AppBundle\\Entity\\OuterExtension')
+                        && $cat->hasSuffix('Extension'))
+                    ) {
+                        continue;
+                    }
 
-                $this->insertUseTraitInPHPCode(
-                    '\\' . $this->convertNamespace($input->getArgument('destination')),
-                    $cat->getFilename()
-                );
-                echo $cat->getFilename() . PHP_EOL;
-            }
+                    $this->insertUseTraitInPHPCode(
+                        '\\' . $this->convertNamespace($input->getArgument('destination')),
+                        $cat->getFilename()
+                    );
+                    echo $cat->getFilename() . PHP_EOL;
+                }
             }
         }
 
         /*
         if ( $this->count < 1 )
-            $this->output->writeln('No missing traits were found');
+        $this->output->writeln('No missing traits were found');
         */
 
         return 0;
@@ -168,7 +167,7 @@ class AddContextualExtensionsInContainersCommand extends ContainerAwareCommand
     public static function isNormalEntity($class)
     {
         return strpos($class, '\\Entity\\') !== false
-            && strpos($class, '\\Tests\\') === false
+        && strpos($class, '\\Tests\\') === false
         ;
     }
 
