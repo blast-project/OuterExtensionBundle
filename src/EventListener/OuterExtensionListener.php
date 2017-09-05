@@ -72,7 +72,7 @@ class OuterExtensionListener implements LoggerAwareInterface, EventSubscriber
     public function getSubscribedEvents()
     {
         return [
-            'loadClassMetadata',
+        'loadClassMetadata',
         ];
     }
 
@@ -83,7 +83,9 @@ class OuterExtensionListener implements LoggerAwareInterface, EventSubscriber
      */
     public function loadClassMetadata(LoadClassMetadataEventArgs $eventArgs)
     {
-        /** @var ClassMetadata $metadata */
+        /**
+         * @var ClassMetadata
+         */
         $metadata = $eventArgs->getClassMetadata();
         $className = $metadata->getName();
 
@@ -103,7 +105,7 @@ class OuterExtensionListener implements LoggerAwareInterface, EventSubscriber
                 ->setInheritance($metadata, $outMetadata)
                 ->addFieldMappings($metadata, $outMetadata)
                 ->addAssociationMappings($metadata, $outMetadata)
-                // TODO: add here other stuff definable by the ORM
+            // TODO: add here other stuff definable by the ORM
             ;
         }
     }
@@ -137,18 +139,18 @@ class OuterExtensionListener implements LoggerAwareInterface, EventSubscriber
                 $metadata->setAssociationOverride($mapping['fieldName'], $mapping);
             } else {
                 switch ($mapping['type']) {
-                    case ClassMetadataInfo::ONE_TO_ONE:
-                        $metadata->mapOneToOne($mapping);
-                        break;
-                    case ClassMetadataInfo::ONE_TO_MANY:
-                        $metadata->mapOneToMany($mapping);
-                        break;
-                    case ClassMetadataInfo::MANY_TO_ONE:
-                        $metadata->mapManyToOne($mapping);
-                        break;
-                    case ClassMetadataInfo::MANY_TO_MANY:
-                        $metadata->mapManyToMany($mapping);
-                        break;
+                case ClassMetadataInfo::ONE_TO_ONE:
+                    $metadata->mapOneToOne($mapping);
+                    break;
+                case ClassMetadataInfo::ONE_TO_MANY:
+                    $metadata->mapOneToMany($mapping);
+                    break;
+                case ClassMetadataInfo::MANY_TO_ONE:
+                    $metadata->mapManyToOne($mapping);
+                    break;
+                case ClassMetadataInfo::MANY_TO_MANY:
+                    $metadata->mapManyToMany($mapping);
+                    break;
                 }
             }
         }
@@ -175,10 +177,13 @@ class OuterExtensionListener implements LoggerAwareInterface, EventSubscriber
      */
     private function setInheritance($metadata, $outMetadata)
     {
-        if (in_array($outMetadata->inheritanceType, [
+        if (in_array(
+            $outMetadata->inheritanceType, [
             ClassMetadataInfo::INHERITANCE_TYPE_JOINED,
             ClassMetadataInfo::INHERITANCE_TYPE_SINGLE_TABLE,
-        ])) {
+            ]
+        )
+        ) {
             $metadata->setInheritanceType($outMetadata->inheritanceType);
             $metadata->setDiscriminatorColumn($outMetadata->discriminatorColumn);
             $metadata->setDiscriminatorMap($outMetadata->discriminatorMap);
