@@ -34,12 +34,6 @@
             "homepage": "http://www.libre-informatique.fr/"
         }
     ],
-    "extra": {
-        "branch-alias": {
-            "dev-master": "0.4.x-dev",
-            "dev-wip-lisem": "0.4.x-dev"
-        }
-    },
     "version": "dev-wip-lisem",
     "autoload": {
         "psr-4": {
