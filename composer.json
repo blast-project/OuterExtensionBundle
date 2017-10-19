@@ -34,7 +34,6 @@
             "homepage": "http://www.libre-informatique.fr/"
         }
     ],
-    "version": "dev-wip-lisem",
     "autoload": {
         "psr-4": {
             "Blast\\OuterExtensionBundle\\": "src/"
