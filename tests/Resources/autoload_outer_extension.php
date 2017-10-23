@@ -11,5 +11,5 @@
  */
 
 foreach (glob(__DIR__ . '/AppBundle/Entity/OuterExtension/*/*.php') as $file) {
-    include_once $file;
+    require_once $file;
 }
