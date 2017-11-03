@@ -39,6 +39,5 @@
         "psr-4": {
             "Blast\\OuterExtensionBundle\\": "src/"
         }
-    },
-    "version": "0.6.4"
+    }
 }
