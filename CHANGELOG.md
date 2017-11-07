@@ -1,14 +1,5 @@
 # Change Log
 
-## [0.6.4](https://github.com/blast-project/OuterExtensionBundle/tree/0.6.4) (2017-11-03)
-[Full Changelog](https://github.com/blast-project/OuterExtensionBundle/compare/0.5.2...0.6.4)
-
-**Merged pull requests:**
-
-- Lisem fix & features [\#28](https://github.com/blast-project/OuterExtensionBundle/pull/28) ([FanchTheSystem](https://github.com/FanchTheSystem))
-- DevKit updates for OuterExtensionBundle [\#27](https://github.com/blast-project/OuterExtensionBundle/pull/27) ([BlastCI](https://github.com/BlastCI))
-- DevKit updates for OuterExtensionBundle [\#25](https://github.com/blast-project/OuterExtensionBundle/pull/25) ([BlastCI](https://github.com/BlastCI))
-
 ## [0.5.2](https://github.com/blast-project/OuterExtensionBundle/tree/0.5.2) (2017-10-19)
 [Full Changelog](https://github.com/blast-project/OuterExtensionBundle/compare/0.5.1...0.5.2)
 
