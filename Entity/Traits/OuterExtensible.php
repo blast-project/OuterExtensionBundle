@@ -10,9 +10,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Blast\OuterExtensionBundle\Entity\Traits;
+namespace Blast\Bundle\OuterExtensionBundle\Entity\Traits;
 
-use Blast\CoreBundle\Tools\Reflection\ClassAnalyzer;
+use Blast\Bundle\CoreBundle\Tools\Reflection\ClassAnalyzer;
 
 trait OuterExtensible
 {

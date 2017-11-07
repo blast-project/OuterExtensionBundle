@@ -1,7 +1,7 @@
 services:
 
     blast_outer_extension.listener.outer_extension:
-        class: Blast\OuterExtensionBundle\EventListener\OuterExtensionListener
+        class: Blast\Bundle\OuterExtensionBundle\EventListener\OuterExtensionListener
         tags:
             - { name: doctrine.event_subscriber, event: loadClassMetadata }
         calls:

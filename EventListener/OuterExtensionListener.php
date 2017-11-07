@@ -10,7 +10,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Blast\OuterExtensionBundle\EventListener;
+namespace Blast\Bundle\OuterExtensionBundle\EventListener;
 
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;

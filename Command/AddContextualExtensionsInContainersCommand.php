@@ -10,10 +10,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Blast\OuterExtensionBundle\Command;
+namespace Blast\Bundle\OuterExtensionBundle\Command;
 
-use Blast\OuterExtensionBundle\Command\Traits\Interaction;
-use Blast\OuterExtensionBundle\Tools\Reflection\ClassAnalyzer;
+use Blast\Bundle\OuterExtensionBundle\Command\Traits\Interaction;
+use Blast\Bundle\OuterExtensionBundle\Tools\Reflection\ClassAnalyzer;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\ClassLoader\ClassMapGenerator;
 use Symfony\Component\Console\Input\InputArgument;

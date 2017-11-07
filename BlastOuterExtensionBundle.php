@@ -10,7 +10,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Blast\OuterExtensionBundle;
+namespace Blast\Bundle\OuterExtensionBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 

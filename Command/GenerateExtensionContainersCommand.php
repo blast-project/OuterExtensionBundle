@@ -10,14 +10,14 @@
  * file that was distributed with this source code.
  */
 
-namespace Blast\OuterExtensionBundle\Command;
+namespace Blast\Bundle\OuterExtensionBundle\Command;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\ClassLoader\ClassMapGenerator;
-use Blast\CoreBundle\Command\Traits\Interaction;
+use Blast\Bundle\CoreBundle\Command\Traits\Interaction;
 
 /**
  * Class GenerateAdminCommand.

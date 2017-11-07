@@ -10,7 +10,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Blast\OuterExtensionBundle\DependencyInjection;
+namespace Blast\Bundle\OuterExtensionBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;

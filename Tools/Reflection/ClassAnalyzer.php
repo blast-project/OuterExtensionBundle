@@ -10,9 +10,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Blast\OuterExtensionBundle\Tools\Reflection;
+namespace Blast\Bundle\OuterExtensionBundle\Tools\Reflection;
 
-use Blast\CoreBundle\Tools\Reflection\ClassAnalyzer as CoreClassAnalyzer;
+use Blast\Bundle\CoreBundle\Tools\Reflection\ClassAnalyzer as CoreClassAnalyzer;
 
 class ClassAnalyzer
 {
