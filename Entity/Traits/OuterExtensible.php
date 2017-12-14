@@ -11,6 +11,8 @@
 
 namespace Blast\Bundle\OuterExtensionBundle\Entity\Traits;
 
+@trigger_error('OuterExtensible Traits is deprecated since Blast 0.6.4 released');
+
 use Blast\Bundle\CoreBundle\Tools\Reflection\ClassAnalyzer;
 
 trait OuterExtensible

@@ -11,6 +11,8 @@
 
 namespace Blast\Bundle\OuterExtensionBundle;
 
+@trigger_error('OuterExtensionBundle is deprecated since Blast 0.6.4 released');
+
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class BlastOuterExtensionBundle extends Bundle
