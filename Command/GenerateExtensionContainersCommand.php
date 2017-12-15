@@ -1,7 +1,6 @@
 <?php
 
 /*
- *
  * Copyright (C) 2015-2017 Libre Informatique
  *
  * This file is licenced under the GNU LGPL v3.
@@ -130,7 +129,7 @@ class GenerateExtensionContainersCommand extends ContainerAwareCommand
             );
 
             if ($result !== false || $result !== '') {
-                ++$this->count;
+                $this->count++;
                 $this->output->writeln(sprintf('Generated trait %s', $path));
             }
 
