@@ -10,7 +10,7 @@
         "symfony/phpunit-bridge": "3.3.*",
         "phpunit/phpunit": "^6.4"
     },
-    "license": "LGPL-3.0",
+    "license": "LGPL-3.0-only",
     "keywords": [
         "symfony",
         "doctrine",
